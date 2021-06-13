@@ -70,8 +70,8 @@ fn main() {
 
     unsafe{
         println!("point:{}", point);
-    }
 
+    }
 }
 
 #[derive(Clone, Copy)]
