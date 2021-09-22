@@ -1,4 +1,4 @@
-use std::sync::{Arc};
+﻿use std::sync::{Arc};
 use std::os::raw::{c_void};
 use std::marker::PhantomData;
 const NULL:* mut c_void = 0 as *mut c_void;
@@ -17,6 +17,67 @@ fn test(a : i32, b: i32)->i32{
 }
 
 fn main() {
+
+    let en = "a";
+    let zh = "上海永大菌业有限公司";
+    let utf =  String::from_utf8(zh.as_bytes().to_vec());
+
+    let mut v: Vec<u16> = zh.encode_utf16().collect();   
+    let u = String::from_utf16(&v).unwrap();
+    let ptr = v.as_ptr() as * const u8;
+    let slice = unsafe{ std::slice::from_raw_parts(ptr, v.len() * std::mem::size_of::<u16>()) };
+    let utf16 = encoding_rs::UTF_16LE.encode(zh).0;
+    let gb18030 = encoding_rs::GB18030.encode(zh).0;
+    let gbk = encoding_rs::GBK.encode(zh).0;
+
+    let cn = encoding_rs::GB18030.decode(&gb18030).0;
+
+    println!("en:{} len:{} zh:{:?} len:{} code:{:?} gb18030:{:?} gbk:{:?} cn:{} utf16:{:?}", en, en.len(), zh.to_string().as_bytes(), zh.len(), slice, gb18030, gbk, cn, utf16);
+        
+
+
+    // &str    -> String--| String::from(s) or s.to_string() or s.to_owned()
+    let str = "xxx";
+    let str1 = str.to_string();
+    let str21:String = str.to_owned();
+    let str3 = String::from(str);
+
+    // &str    -> &[u8]---| s.as_bytes()
+    let bytes = str.as_bytes();
+
+    // &str    -> Vec<u8>-| s.as_bytes().to_vec() or s.as_bytes().to_owned()
+    let v = str.as_bytes().to_vec();
+
+    // String  -> &str----| &s if possible* else s.as_str()
+    let str2:&str = &str1;
+    let str2:&str = str1.as_str();
+
+    // String  -> &[u8]---| s.as_bytes()
+    let bytes: &[u8] =  str1.as_bytes();
+
+    // String  -> Vec<u8>-| s.into_bytes()
+    let v: Vec<u8> =  str21.into_bytes();
+
+    // &[u8]   -> &str----| s.to_vec() or s.to_owned()
+    let str = bytes.to_vec().as_slice();
+
+    // &[u8]   -> String--| std::str::from_utf8(s).unwrap(), but don't**
+    let str1 : &str = std::str::from_utf8(bytes).unwrap();
+
+    // &[u8]   -> Vec<u8>-| String::from_utf8(s).unwrap(), but don't**
+    let str1 : String = String::from_utf8(bytes.to_vec()).unwrap();
+
+    // Vec<u8> -> &str----| &s if possible* else s.as_slice()
+    let str1 : &[u8] = &v;
+    let str1 : &[u8] = v.as_slice();
+
+    // Vec<u8> -> str--| std::str::from_utf8(&s).unwrap(), but don't**
+    let str1 : &str = std::str::from_utf8(&v).unwrap();
+
+    // Vec<u8> -> String---| String::from_utf8(s).unwrap(), but don't**
+    let str1 : String = String::from_utf8(v).unwrap();
+
+
     println!("Hello, world!");  
     let c = test(1, 2);
     println!("c:{}", c);
