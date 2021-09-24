@@ -17,17 +17,17 @@
             "console":"integratedTerminal"
         }, 
         { 
-            "name": "(gdb) 启动", 
+            "name": "(test1_gdb) 启动", 
             "type": "cppdbg", 
             "request": "launch", 
-            "program": "${workspaceFolder}/target/debug/${workspaceFolderBasename}.exe", 
+            "program": "${workspaceFolder}/target/debug/test.exe", 
             "args": [], 
             "stopAtEntry": false, 
             "cwd": "${workspaceFolder}", 
             "environment": [], 
             "externalConsole": false,
             "MIMode": "gdb", 
-            "miDebuggerPath": "这里填GDB所在的目录", 
+            "miDebuggerPath": "gdb", 
             "setupCommands": [ 
                 { 
                     "description": "为 gdb 启用整齐打印", 
